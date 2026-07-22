@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHMNV — Daria Shamanova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Helvetica Neue not on Google Fonts — using Inter as closest web-safe alternative with same proportions -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════
+   TOKENS
+═══════════════════════ */
+:root {
+  --ink:    #171717;   /* was #080808, now #171717 per request */
+  --ink2:   #2a2a2a;
+  --ash:    #F2F3ED;   /* was #F2F0ED, now #F2F3ED per request */
+  --white:  #FAFAF8;
+  --stone:  #8A8580;
+  --border: rgba(23,23,23,.08);
+  --bmd:    rgba(23,23,23,.15);
+  /* Helvetica Neue Medium → Inter 500 / Helvetica Neue Light → Inter 300 */
+  --fh:     'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --fs:     'Cormorant Garamond', serif;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+html { scroll-behavior:smooth }
+body {
+  background:var(--ash); color:var(--ink);
+  font-family:var(--fh); font-weight:300;   /* Light */
+  font-size:14px; line-height:1.75;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  cursor:auto;   /* ← removed custom cursor per request */
+}
+
+/* ── NO custom cursor — removed completely ── */
+
+/* ── Nav ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:300;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:28px 6vw;
+  transition:padding .5s,background .5s,border-color .5s;
+  border-bottom:1px solid transparent;
+}
+nav.s { background:rgba(242,243,237,.96); backdrop-filter:blur(20px); padding:18px 6vw; border-bottom-color:var(--border) }
+.logo {
+  font-family:var(--fh); font-weight:500;  /* Medium */
+  /* ↑ Larger SHMNV in hero nav */
+  font-size:22px; letter-spacing:.45em; text-transform:uppercase;
+  color:var(--ink); text-decoration:none;
+}
+.nav-links { display:flex; gap:44px; list-style:none }
+.nav-links a { font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:var(--ink); text-decoration:none; opacity:.4; transition:opacity .2s; font-weight:300 }
+.nav-links a:hover { opacity:1 }
+.nav-burger { display:none; flex-direction:column; gap:6px; cursor:pointer; background:none; border:none; padding:4px }
+.nav-burger span { width:22px; height:1px; background:var(--ink); display:block }
+
+/* ── Hero ── */
+#hero { min-height:100vh; display:grid; grid-template-columns:1fr 1fr; overflow:hidden }
+.hero-l {
+  display:flex; flex-direction:column; justify-content:center;
+  padding:140px 6vw 120px; position:relative;
+}
+.hero-wm { position:absolute; left:6vw; top:50%; transform:translateY(-50%) rotate(-90deg) translateX(-50%); font-size:9px; letter-spacing:.55em; text-transform:uppercase; color:var(--ink); opacity:.06; white-space:nowrap; user-select:none }
+.hero-eye { font-size:9px; letter-spacing:.45em; text-transform:uppercase; color:var(--stone); margin-bottom:28px; display:flex; align-items:center; gap:16px; font-weight:300 }
+.hero-eye::before { content:''; width:28px; height:1px; background:var(--stone) }
+
+/* SHMNV hero logo — bigger per request */
+.hero-brand {
+  font-family:var(--fh); font-weight:500;  /* Medium */
+  font-size:clamp(48px,5.5vw,80px);
+  letter-spacing:.35em; text-transform:uppercase;
+  color:var(--ink); margin-bottom:16px; line-height:1;
+}
+
+/* Name — italic serif, uniform weight */
+.hero-name {
+  font-family:var(--fs);
+  font-size:clamp(36px,4.5vw,64px);
+  font-weight:300; font-style:italic;
+  line-height:1.1; letter-spacing:-.01em; margin-bottom:40px;
+  color:var(--stone);
+}
+
+/* Quote */
+.hero-quote-wrap { border-left:2px solid var(--bmd); padding-left:24px }
+.hero-quote-text { font-family:var(--fs); font-size:clamp(14px,1.4vw,18px); font-style:italic; font-weight:300; color:var(--stone); line-height:1.75; letter-spacing:.01em }
+.hero-quote-cite { display:block; margin-top:10px; font-family:var(--fh); font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:var(--stone); opacity:.6; font-weight:300; font-style:normal }
+
+.hero-r { position:relative; overflow:hidden; background:var(--ink); display:flex; flex-direction:column }
+.hero-portrait-area { flex:1; overflow:hidden; position:relative; min-height:0 }
+.hero-img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block }
+.hero-ph { width:100%; height:100%; min-height:calc(100vh - 44px); background:linear-gradient(175deg,#1e1e1e,#111 55%,#222); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px }
+.hero-ph span { font-size:9px; letter-spacing:.45em; color:#fff; opacity:.15; text-transform:uppercase }
+.hero-strip { height:44px; background:var(--ink); display:flex; align-items:center; overflow:hidden; flex-shrink:0 }
+.strip-track { display:flex; white-space:nowrap; animation:marquee 20s linear infinite }
+.strip-item { font-size:8px; letter-spacing:.4em; text-transform:uppercase; color:rgba(255,255,255,.3); padding:0 28px; border-right:1px solid rgba(255,255,255,.07); font-weight:300 }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── About ── */
+#about { padding:120px 6vw 100px; display:grid; grid-template-columns:200px 1fr; gap:80px; align-items:start; border-top:1px solid var(--border) }
+.about-aside { position:sticky; top:120px }
+/* "About the artist" label — sits above name, no vertical line */
+.aside-lbl {
+  font-size:9px; letter-spacing:.4em; text-transform:uppercase;
+  color:var(--stone); font-weight:300;
+  /* removed ::after vertical line */
+}
+.about-name { font-family:var(--fh); font-size:clamp(28px,3.5vw,44px); font-weight:500; line-height:1.1; letter-spacing:-.02em; margin-bottom:8px }
+.about-name-sub { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--stone); font-weight:300; margin-bottom:32px }
+.about-p { color:var(--stone); line-height:2.1; max-width:580px; font-weight:300 }
+.about-p p+p { margin-top:18px }
+.about-q { margin-top:48px; padding:36px 40px; border:1px solid var(--bmd); position:relative; background:var(--white) }
+.about-q::before { content:'\201C'; font-family:var(--fs); font-size:100px; line-height:1; color:var(--ink); opacity:.04; position:absolute; top:-14px; left:24px }
+.about-q p { font-family:var(--fs); font-size:clamp(15px,1.8vw,20px); font-style:italic; font-weight:300; line-height:1.65; color:var(--ink); letter-spacing:.01em }
+.about-q cite { display:block; margin-top:14px; font-size:9px; letter-spacing:.32em; text-transform:uppercase; color:var(--stone); font-style:normal; font-weight:300 }
+
+/* ── Gallery ── */
+#gallery { position:relative }
+.gallery-intro { padding:72px 6vw 48px; border-top:1px solid var(--border); display:flex; align-items:flex-end; justify-content:space-between; gap:24px }
+.gallery-title { font-family:var(--fh); font-size:clamp(32px,4.5vw,58px); font-weight:500; letter-spacing:-.02em; line-height:1 }
+.gallery-title em { font-style:italic; font-weight:300; font-family:var(--fs) }
+.gallery-hint { font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:var(--stone); display:flex; align-items:center; gap:10px; padding-bottom:4px; flex-shrink:0; font-weight:300 }
+.gallery-hint svg { animation:bDown 2s infinite }
+@keyframes bDown { 0%,100%{transform:translateY(0)} 55%{transform:translateY(5px)} }
+.gallery-filters { display:flex; gap:4px; flex-wrap:wrap; padding:0 6vw 52px }
+.fbtn { font-size:9px; letter-spacing:.24em; text-transform:uppercase; padding:9px 22px; border:1px solid var(--bmd); background:transparent; color:var(--stone); cursor:pointer; transition:all .22s; font-family:var(--fh); font-weight:300 }
+.fbtn.a,.fbtn:hover { background:var(--ink); color:var(--white); border-color:var(--ink) }
+
+/* Progress dots */
+.prog-dots { position:fixed; right:28px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:10px; z-index:200; opacity:0; transition:opacity .5s; pointer-events:none }
+.prog-dots.vis { opacity:1; pointer-events:all }
+.prog-dot { width:5px; height:5px; border-radius:50%; background:var(--bmd); cursor:pointer; transition:background .3s,transform .3s }
+.prog-dot.a { background:var(--ink); transform:scale(1.7) }
+
+/* Stack */
+.stack-wrap { position:relative }
+.stack-item { position:sticky; display:flex; align-items:center; justify-content:center }
+
+/* ── Card ──
+   Key fix: image column uses aspect-ratio:1/1 so square
+   paintings are never cropped on desktop either.
+   object-fit:contain shows the full painting.
+*/
+.s-card {
+  width:calc(100% - 12vw); max-width:1080px;
+  background:var(--white);
+  display:grid; grid-template-columns:1fr 1fr;
+  /* Cap height so the full card fits within the viewport */
+  max-height:calc(100vh - 140px);
+  overflow:hidden;
+  box-shadow:0 2px 4px rgba(23,23,23,.04),0 12px 40px rgba(23,23,23,.10),0 40px 100px rgba(23,23,23,.12);
+  cursor:pointer;
+  transition:transform .6s cubic-bezier(.22,.68,0,1.2),box-shadow .6s;
+  position:relative;
+}
+.s-card:hover { transform:translateY(-6px); box-shadow:0 4px 8px rgba(23,23,23,.06),0 20px 60px rgba(23,23,23,.14),0 60px 140px rgba(23,23,23,.16) }
+
+.s-img-col {
+  position:relative; overflow:hidden;
+  /* Fill height of card, not aspect-ratio driven on desktop */
+  aspect-ratio:unset;
+  min-height:0;
+  background:var(--white);
+}
+/* No collection label above title on card per request */
+.s-title-band {
+  position:absolute; bottom:0; left:0; right:0; z-index:3;
+  padding:40px 32px 28px;
+  background:linear-gradient(to top, rgba(23,23,23,.82) 0%, transparent 100%);
+}
+/* collection label REMOVED from title band */
+.s-name-over { font-family:var(--fh); font-size:clamp(22px,2.4vw,34px); font-weight:500; line-height:1; letter-spacing:-.01em; color:#fff }
+
+.s-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .9s cubic-bezier(.25,.46,.45,.94) }
+.s-card:hover .s-img { transform:scale(1.03) }
+.s-ph { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px }
+.s-ph-icon { font-size:36px; opacity:.14 }
+.s-ph-txt { font-size:8px; letter-spacing:.22em; text-transform:uppercase; color:#fff; opacity:.2 }
+.s-expand { position:absolute; top:20px; right:20px; z-index:4; width:36px; height:36px; border:1px solid rgba(255,255,255,.28); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .4s; color:#fff }
+.s-card:hover .s-expand { opacity:1 }
+
+.s-info { padding:0; display:flex; flex-direction:column; border-left:1px solid var(--border) }
+.s-info-top { flex:1; padding:40px 44px 28px; display:flex; flex-direction:column; justify-content:space-between }
+.s-idx { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:var(--stone); text-align:right; margin-bottom:auto; font-weight:300 }
+.s-title-main { font-family:var(--fh); font-size:clamp(28px,3vw,46px); font-weight:500; line-height:1.0; letter-spacing:-.02em; margin:0; padding-top:20px }
+.s-spec { font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--stone); margin-top:10px; padding-bottom:14px; border-bottom:1px solid var(--border); font-weight:300 }
+.s-desc { font-size:13px; color:var(--stone); line-height:2; margin-top:18px; max-width:380px; font-weight:300 }
+.s-info-foot { padding:24px 44px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; margin-top:auto }
+.s-price { font-family:var(--fh); font-size:13px; font-weight:300; letter-spacing:.08em; color:var(--stone) }
+.s-cta { display:flex; align-items:center; gap:10px; font-size:9px; letter-spacing:.28em; text-transform:uppercase; background:var(--ink); color:var(--white); border:none; padding:13px 24px; cursor:pointer; font-family:var(--fh); font-weight:300; transition:background .25s }
+.s-cta:hover { background:var(--ink2) }
+.s-cta svg { transition:transform .3s }
+.s-cta:hover svg { transform:translateX(4px) }
+
+/* ── Contacts ── */
+#contacts { padding:120px 6vw; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; border-top:1px solid var(--border) }
+.ct-h { font-family:var(--fh); font-size:clamp(34px,4.5vw,58px); font-weight:500; line-height:1.05; margin-bottom:22px; letter-spacing:-.02em }
+.ct-h em { font-style:italic; font-weight:300; font-family:var(--fs) }
+.ct-p { color:var(--stone); line-height:2; max-width:380px; margin-bottom:38px; font-size:13px; font-weight:300 }
+.btn-wm { display:inline-flex; align-items:center; gap:14px; padding:17px 38px; border:1px solid var(--ink); background:transparent; color:var(--ink); font-family:var(--fh); font-size:9px; font-weight:300; letter-spacing:.35em; text-transform:uppercase; cursor:pointer; transition:all .35s; position:relative; overflow:hidden; margin-bottom:52px }
+.btn-wm::before { content:''; position:absolute; inset:0; background:var(--ink); transform:translateX(-100%); transition:transform .4s cubic-bezier(.25,.46,.45,.94); z-index:0 }
+.btn-wm:hover::before { transform:translateX(0) }
+.btn-wm:hover { color:var(--white) }
+.btn-wm span,.btn-wm svg { position:relative; z-index:1 }
+.btn-wm svg { transition:transform .3s }
+.btn-wm:hover svg { transform:translateX(4px) }
+
+/* ── Follow section ── */
+.soc-section {}
+.soc-lbl { font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink); margin-bottom:20px; font-weight:500 }
+
+/* Desktop: photo on top full width, buttons below */
+.soc-layout {
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.soc-photo {
+  width:100%;
+  /* Let photo show in natural ratio — don't crop */
+  overflow:hidden;
+}
+.soc-photo img {
+  width:100%;
+  height:auto;          /* natural height — no cropping */
+  display:block;
+  object-fit:cover;
+  object-position:center top;
+  filter:grayscale(6%);
+}
+.soc-buttons {
+  display:flex;
+  flex-direction:row;   /* side by side on desktop */
+  border-top:1px solid var(--border);
+}
+
+.soc-link {
+  flex:1;
+  display:flex; align-items:center; justify-content:center;
+  gap:14px; padding:28px 24px;
+  text-decoration:none; color:var(--ink);
+  border-right:1px solid var(--border);
+  position:relative; overflow:hidden; transition:color .35s;
+}
+.soc-link:last-child { border-right:none }
+.soc-link::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:0; background:var(--ink); transition:width .45s ease; z-index:0;
+}
+.soc-link:hover::before { width:100% }
+.soc-link:hover { color:var(--white) }
+.soc-icon {
+  width:40px; height:40px; border:1px solid var(--bmd);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; z-index:1; transition:border-color .35s;
+}
+.soc-link:hover .soc-icon { border-color:rgba(255,255,255,.3) }
+.soc-name {
+  font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  font-weight:400; z-index:1;
+}
+.soc-arr { z-index:1; opacity:0; transition:opacity .3s,transform .3s; margin-left:8px }
+.soc-link:hover .soc-arr { opacity:1; transform:translateX(3px) }
+
+.ct-deco { display:flex; align-items:center; justify-content:center }
+.ct-deco-txt { font-family:var(--fs); font-size:clamp(80px,13vw,180px); font-weight:300; opacity:.04; letter-spacing:-.04em; line-height:1; user-select:none }
+
+/* ── Forms ── */
+.ff { position:relative; margin-bottom:18px }
+.ff input,.ff textarea { width:100%; padding:13px 0 9px; background:transparent; border:none; border-bottom:1px solid var(--bmd); font-family:var(--fh); font-size:13px; font-weight:300; color:var(--ink); outline:none; resize:none; transition:border-color .3s }
+.ff input:focus,.ff textarea:focus { border-bottom-color:var(--ink) }
+.ff label { position:absolute; top:13px; left:0; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--stone); pointer-events:none; transition:all .3s; font-weight:300 }
+.ff input:focus~label,.ff input:not(:placeholder-shown)~label,
+.ff textarea:focus~label,.ff textarea:not(:placeholder-shown)~label { top:-9px; font-size:8px; color:var(--ink) }
+.f-submit { width:100%; padding:16px; background:var(--ink); color:var(--white); border:none; font-family:var(--fh); font-size:9px; font-weight:300; letter-spacing:.35em; text-transform:uppercase; cursor:pointer; transition:background .3s; margin-top:8px }
+.f-submit:hover { background:var(--ink2) }
+.f-ok { display:none; text-align:center; padding:28px 0; font-family:var(--fs); font-size:22px; font-weight:300 }
+
+/* ── Footer ── */
+footer { padding:26px 6vw; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between }
+.f-logo { font-family:var(--fh); font-weight:500; font-size:12px; letter-spacing:.52em; text-transform:uppercase; color:var(--ink); text-decoration:none }
+.f-copy { font-size:9px; letter-spacing:.12em; color:var(--stone); font-weight:300 }
+
+/* ── Painting Modal ── */
+.m-back { position:fixed; inset:0; z-index:500; background:rgba(23,23,23,.97); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .4s; padding:24px }
+.m-back.o { opacity:1; pointer-events:all }
+.m-box { background:var(--white); max-width:1100px; width:100%; max-height:92vh; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; transform:translateY(28px) scale(.97); transition:transform .5s cubic-bezier(.25,.46,.45,.94); position:relative }
+.m-back.o .m-box { transform:none }
+.m-media { background:var(--white); position:relative; min-height:500px; display:flex; align-items:center; justify-content:center }
+.m-main-img { width:100%; height:100%; object-fit:contain; display:block }
+.m-main-ph { width:100%; height:100%; min-height:500px; background:var(--ash); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px }
+.m-main-ph span { font-size:9px; letter-spacing:.4em; color:var(--stone); opacity:.6; text-transform:uppercase }
+.m-thumbs { position:absolute; bottom:0; left:0; right:0; display:flex; gap:4px; padding:8px; background:rgba(0,0,0,.6); overflow-x:auto }
+.m-th { width:56px; height:42px; flex-shrink:0; background:#2a2a2a; border:2px solid transparent; transition:border-color .2s; cursor:pointer; overflow:hidden }
+.m-th.a { border-color:#fff }
+.m-th img { width:100%; height:100%; object-fit:cover }
+.m-th-ph { width:100%; height:100%; background:#222; display:flex; align-items:center; justify-content:center; font-size:9px; color:#fff; opacity:.28 }
+.m-close { position:absolute; top:20px; right:20px; z-index:10; width:38px; height:38px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.12); border:none; cursor:pointer; color:#fff; transition:background .2s }
+.m-close:hover { background:rgba(255,255,255,.25) }
+.m-info { padding:48px 44px; display:flex; flex-direction:column; overflow-y:auto }
+.m-coll { font-size:9px; letter-spacing:.38em; text-transform:uppercase; color:var(--stone); margin-bottom:6px; font-weight:300 }
+.m-title { font-family:var(--fh); font-size:clamp(28px,3vw,42px); font-weight:500; line-height:1.1; margin-bottom:6px }
+.m-year { font-size:10px; color:var(--stone); letter-spacing:.1em; margin-bottom:22px; font-weight:300 }
+.m-desc { font-size:13px; color:var(--stone); line-height:2; margin-bottom:20px; flex:1; font-weight:300 }
+.m-collection-text { font-family:var(--fs); font-style:italic; font-size:13px; color:var(--stone); line-height:1.9; margin-bottom:24px; padding:16px 20px; border-left:2px solid var(--bmd) }
+.m-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:28px }
+.m-tag { font-size:9px; letter-spacing:.2em; text-transform:uppercase; padding:5px 14px; border:1px solid var(--bmd); color:var(--stone); font-weight:300 }
+.m-price-band { padding:22px 28px; background:var(--ink); margin-bottom:28px; display:flex; align-items:center; justify-content:space-between }
+.m-price-lbl { font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.45); font-weight:300 }
+.m-price-val { font-family:var(--fs); font-size:28px; font-weight:300; color:#fff }
+.m-form-title { font-family:var(--fh); font-size:18px; font-weight:500; margin-bottom:20px }
+
+/* ── Write Me Modal ── */
+.wm-back { position:fixed; inset:0; z-index:600; background:rgba(23,23,23,.97); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .4s; padding:20px }
+.wm-back.o { opacity:1; pointer-events:all }
+.wm-box { background:var(--white); max-width:540px; width:100%; padding:60px 56px; transform:translateY(22px) scale(.97); transition:transform .5s cubic-bezier(.25,.46,.45,.94); position:relative }
+.wm-back.o .wm-box { transform:none }
+.wm-x { position:absolute; top:22px; right:22px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:none; border:none; cursor:pointer; opacity:.4; color:var(--ink); transition:opacity .2s }
+.wm-x:hover { opacity:1 }
+.wm-title { font-family:var(--fh); font-size:30px; font-weight:500; margin-bottom:6px }
+.wm-sub { font-size:11px; color:var(--stone); letter-spacing:.06em; margin-bottom:38px; font-weight:300 }
+
+/* Mobile nav */
+.mob-nav { display:none; position:fixed; inset:0; z-index:190; background:var(--ash); flex-direction:column; align-items:center; justify-content:center; gap:36px }
+.mob-nav.o { display:flex }
+.mob-nav a { font-family:var(--fh); font-weight:500; font-size:32px; color:var(--ink); text-decoration:none }
+
+/* Reveal */
+.rv { opacity:0; transform:translateY(22px); transition:opacity .85s,transform .85s }
+.rv.v { opacity:1; transform:none }
+
+/* ── Responsive ── */
+@media(max-width:960px){
+  #hero { grid-template-columns:1fr; min-height:auto }
+  .hero-l { padding:110px 6vw 52px }
+  .hero-r { min-height:70vw }
+  .hero-portrait-area { min-height:70vw }
+
+  #about { grid-template-columns:1fr; gap:36px; padding:80px 6vw }
+  .about-aside { position:static }
+
+  .gallery-intro { flex-direction:column; align-items:flex-start; gap:16px; padding:56px 6vw 36px }
+  .gallery-hint { display:none }
+
+  /* Mobile card: single column, square image = full painting */
+  .s-card { grid-template-columns:1fr; width:calc(100% - 8vw); max-height:none; overflow:hidden }
+  .s-img-col { aspect-ratio:1/1; height:auto }
+  .s-img { object-fit:cover; background:var(--white) }
+  .s-title-band { padding:16px 22px 20px }
+  .s-name-over { font-size:clamp(18px,5vw,28px) }
+  .s-info-top { padding:24px 24px 16px }
+  .s-title-main { font-size:clamp(22px,5vw,34px); padding-top:14px }
+  .s-desc { display:none }
+  .s-info-foot { padding:18px 24px }
+
+  /* Socials — buttons stack vertically on mobile */
+  .soc-buttons { flex-direction:column }
+  .soc-link { border-right:none; border-bottom:1px solid var(--border); justify-content:flex-start }
+  .soc-link:last-child { border-bottom:none }
+
+  #contacts { grid-template-columns:1fr; gap:60px; padding:80px 6vw }
+  .ct-deco { display:none }
+  .m-box { grid-template-columns:1fr; max-height:95vh }
+  .m-media { min-height:unset; background:var(--white) }
+  .m-main-img { object-fit:contain; background:var(--white); min-height:260px }
+  .m-info { padding:30px 26px }
+  .wm-box { padding:44px 28px }
+  .nav-links { display:none }
+  .nav-burger { display:flex }
+  .prog-dots { display:none }
+}
+@media(max-width:560px){
+  footer { flex-direction:column; gap:10px; text-align:center }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">SHMNV</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Works</a></li>
+    <li><a href="#contacts">Contact</a></li>
+  </ul>
+  <button class="nav-burger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mob-nav" id="mobNav">
+  <a href="#about" onclick="toggleNav()">About</a>
+  <a href="#gallery" onclick="toggleNav()">Works</a>
+  <a href="#contacts" onclick="toggleNav()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-l">
+    <div class="hero-wm">SHMNV · 2025</div>
+    <p class="hero-eye">Artist · Oil Painting</p>
+    <div class="hero-brand">SHMNV</div>
+    <h1 class="hero-name">Daria Shamanova</h1>
+    <div class="hero-quote-wrap">
+      <p class="hero-quote-text">Each work is a conversation between movement and stillness — painted in oil, felt in silence.</p>
+      <cite class="hero-quote-cite">— Daria Shamanova</cite>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="hero-portrait-area">
+      <img src="portrait_daria.jpg" class="hero-img" alt="Daria Shamanova">
+    </div>
+    <div class="hero-strip">
+      <div class="strip-track">
+        <span class="strip-item">Original Paintings</span>
+        <span class="strip-item">Oil on Canvas</span>
+        <span class="strip-item">Horses &amp; Animals</span>
+        <span class="strip-item">Private Collections</span>
+        <span class="strip-item">Commissions Open</span>
+        <span class="strip-item">Original Paintings</span>
+        <span class="strip-item">Oil on Canvas</span>
+        <span class="strip-item">Horses &amp; Animals</span>
+        <span class="strip-item">Private Collections</span>
+        <span class="strip-item">Commissions Open</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-aside rv">
+    <div class="aside-lbl">About the artist</div>
+  </div>
+  <div class="rv">
+    <div class="about-name">Daria Shamanova</div>
+    <div class="about-name-sub">SHMNV</div>
+    <div class="about-p">
+      <p>Daria Shamanova is a contemporary animal painter working in oil. At the center of her practice is an inquiry into individuality, emotional presence, and the inner life of animals.</p>
+      <p>Through her work, she seeks to portray them not as symbols or objects, but as beings in their own right — inviting the viewer into a deeper dialogue with the living world.</p>
+    </div>
+    <div class="about-q rv">
+      <p>My art is rooted in the belief that every living being has an intrinsic value, regardless of the role people assign to it.</p>
+      <cite>— Daria Shamanova</cite>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-intro rv">
+    <h2 class="gallery-title">Works &amp;<br><em>Collections</em></h2>
+    <div class="gallery-hint">Scroll to explore
+      <svg width="12" height="18" viewBox="0 0 12 22" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1v20M1 15l5 6 5-6"/></svg>
+    </div>
+  </div>
+  <div class="gallery-filters rv">
+    <button class="fbtn a" data-f="all">All works</button>
+    <button class="fbtn" data-f="speculum">SPECULUM</button>
+  </div>
+  <div class="prog-dots" id="progDots"></div>
+  <div class="stack-wrap" id="stackWrap">
+
+    <!-- SAPPHIRE -->
+    <div class="stack-item" data-collection="speculum"
+      data-title="SAPPHIRE"
+      data-year="2026 · 120×120 cm · Oil on canvas · Collection: SPECULUM"
+      data-collection-name="SPECULUM"
+      data-price="On request"
+      data-desc="Sapphire symbolizes wisdom, serenity, and inner clarity. In this work, the horse becomes an image of silent presence, existing beyond time and human ideas of value. It is an invitation to pause and recognize the beauty of life itself."
+      data-collection-desc="My work explores the horse as an absolute value rather than a symbol or a tool. In my ongoing series Speculum, each portrait exists in the color of a different precious mineral, reflecting the unique inner presence of the animal. Inspired by the Akhal-Teke horse — whose luminous coat resembles the glow of a gemstone — the series invites viewers to recognize that the greatest treasures have never belonged beneath the earth, but have always been alive."
+      data-tech="Oil on canvas"
+      data-images='["painting_sapphire.jpg"]'
+      onclick="openM(this)">
+      <div class="s-card">
+        <div class="s-img-col">
+          <div class="s-title-band">
+            <div class="s-name-over">SAPPHIRE</div>
+          </div>
+          <img src="painting_sapphire.jpg" class="s-img" alt="SAPPHIRE">
+          <div class="s-expand"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-9 9M3 21l9-9"/></svg></div>
+        </div>
+        <div class="s-info">
+          <div class="s-info-top">
+            <div class="s-idx">01 / 04</div>
+            <div>
+              <h2 class="s-title-main">SAPPHIRE</h2>
+              <div class="s-spec">2026 · Oil on Canvas · 120×120 cm · Collection: SPECULUM</div>
+              <p class="s-desc">Sapphire symbolizes wisdom, serenity, and inner clarity. The horse becomes an image of silent presence, existing beyond time and human ideas of value.</p>
+            </div>
+          </div>
+          <div class="s-info-foot">
+            <div class="s-price">On request</div>
+            <button class="s-cta" onclick="event.stopPropagation();openM(this.closest('.stack-item'))">View work <svg width="12" height="8" viewBox="0 0 16 10" fill="none"><path d="M1 5H15M11 1L15 5L11 9" stroke="currentColor" stroke-width="1.2"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RUBY -->
+    <div class="stack-item" data-collection="speculum"
+      data-title="RUBY"
+      data-year="2026 · 120×120 cm · Oil on canvas · Collection: SPECULUM"
+      data-collection-name="SPECULUM"
+      data-price="On request"
+      data-desc="Ruby embodies vitality, strength, and the fire of life. The mirrored composition creates a sense of unity while allowing each figure to retain its individuality. The work reminds us that true value is found in authenticity, connection, and the quiet strength of every living being."
+      data-collection-desc="My work explores the horse as an absolute value rather than a symbol or a tool. In my ongoing series Speculum, each portrait exists in the color of a different precious mineral, reflecting the unique inner presence of the animal. Inspired by the Akhal-Teke horse — whose luminous coat resembles the glow of a gemstone — the series invites viewers to recognize that the greatest treasures have never belonged beneath the earth, but have always been alive."
+      data-tech="Oil on canvas"
+      data-images='["painting_ruby.jpg"]'
+      onclick="openM(this)">
+      <div class="s-card">
+        <div class="s-img-col">
+          <div class="s-title-band">
+            <div class="s-name-over">RUBY</div>
+          </div>
+          <img src="painting_ruby.jpg" class="s-img" alt="RUBY">
+          <div class="s-expand"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-9 9M3 21l9-9"/></svg></div>
+        </div>
+        <div class="s-info">
+          <div class="s-info-top">
+            <div class="s-idx">02 / 04</div>
+            <div>
+              <h2 class="s-title-main">RUBY</h2>
+              <div class="s-spec">2026 · Oil on Canvas · 120×120 cm · Collection: SPECULUM</div>
+              <p class="s-desc">Ruby embodies vitality, strength, and the fire of life. The mirrored composition creates a sense of unity while each figure retains its individuality.</p>
+            </div>
+          </div>
+          <div class="s-info-foot">
+            <div class="s-price">On request</div>
+            <button class="s-cta" onclick="event.stopPropagation();openM(this.closest('.stack-item'))">View work <svg width="12" height="8" viewBox="0 0 16 10" fill="none"><path d="M1 5H15M11 1L15 5L11 9" stroke="currentColor" stroke-width="1.2"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMERALD -->
+    <div class="stack-item" data-collection="speculum"
+      data-title="EMERALD"
+      data-year="2026 · 120×120 cm · Oil on canvas · Collection: SPECULUM"
+      data-collection-name="SPECULUM"
+      data-price="On request"
+      data-desc="Emerald has long been associated with harmony, renewal, and life. Through symmetry and a restrained composition, this work reflects the balance between nature and the animal, presenting the horse as a living treasure that exists independently of the human gaze."
+      data-collection-desc="My work explores the horse as an absolute value rather than a symbol or a tool. In my ongoing series Speculum, each portrait exists in the color of a different precious mineral, reflecting the unique inner presence of the animal. Inspired by the Akhal-Teke horse — whose luminous coat resembles the glow of a gemstone — the series invites viewers to recognize that the greatest treasures have never belonged beneath the earth, but have always been alive."
+      data-tech="Oil on canvas"
+      data-images='["painting_emerald.jpg"]'
+      onclick="openM(this)">
+      <div class="s-card">
+        <div class="s-img-col">
+          <div class="s-title-band">
+            <div class="s-name-over">EMERALD</div>
+          </div>
+          <img src="painting_emerald.jpg" class="s-img" alt="EMERALD">
+          <div class="s-expand"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-9 9M3 21l9-9"/></svg></div>
+        </div>
+        <div class="s-info">
+          <div class="s-info-top">
+            <div class="s-idx">03 / 04</div>
+            <div>
+              <h2 class="s-title-main">EMERALD</h2>
+              <div class="s-spec">2026 · Oil on Canvas · 120×120 cm · Collection: SPECULUM</div>
+              <p class="s-desc">Emerald speaks of harmony, renewal, and life. The work presents the horse as a living treasure existing independently of the human gaze.</p>
+            </div>
+          </div>
+          <div class="s-info-foot">
+            <div class="s-price">On request</div>
+            <button class="s-cta" onclick="event.stopPropagation();openM(this.closest('.stack-item'))">View work <svg width="12" height="8" viewBox="0 0 16 10" fill="none"><path d="M1 5H15M11 1L15 5L11 9" stroke="currentColor" stroke-width="1.2"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AMETHYST -->
+    <div class="stack-item" data-collection="speculum"
+      data-title="AMETHYST"
+      data-year="2026 · 120×120 cm · Oil on canvas · Collection: SPECULUM"
+      data-collection-name="SPECULUM"
+      data-price="On request"
+      data-desc="Amethyst has long been associated with intuition and spiritual awareness. The two figures, reaching upward, appear to be drawn toward something beyond the visible. The work speaks of the search for light, inner growth, and the enduring desire to reach what cannot be fully seen."
+      data-collection-desc="My work explores the horse as an absolute value rather than a symbol or a tool. In my ongoing series Speculum, each portrait exists in the color of a different precious mineral, reflecting the unique inner presence of the animal. Inspired by the Akhal-Teke horse — whose luminous coat resembles the glow of a gemstone — the series invites viewers to recognize that the greatest treasures have never belonged beneath the earth, but have always been alive."
+      data-tech="Oil on canvas"
+      data-images='["painting_amethyst.jpg"]'
+      onclick="openM(this)">
+      <div class="s-card">
+        <div class="s-img-col">
+          <div class="s-title-band">
+            <div class="s-name-over">AMETHYST</div>
+          </div>
+          <img src="painting_amethyst.jpg" class="s-img" alt="AMETHYST">
+          <div class="s-expand"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-9 9M3 21l9-9"/></svg></div>
+        </div>
+        <div class="s-info">
+          <div class="s-info-top">
+            <div class="s-idx">04 / 04</div>
+            <div>
+              <h2 class="s-title-main">AMETHYST</h2>
+              <div class="s-spec">2026 · Oil on Canvas · 120×120 cm · Collection: SPECULUM</div>
+              <p class="s-desc">Amethyst speaks of intuition and spiritual awareness. Two figures reach upward, drawn toward something beyond the visible — the search for light and inner growth.</p>
+            </div>
+          </div>
+          <div class="s-info-foot">
+            <div class="s-price">On request</div>
+            <button class="s-cta" onclick="event.stopPropagation();openM(this.closest('.stack-item'))">View work <svg width="12" height="8" viewBox="0 0 16 10" fill="none"><path d="M1 5H15M11 1L15 5L11 9" stroke="currentColor" stroke-width="1.2"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section id="contacts">
+  <div class="rv">
+    <h2 class="ct-h">Interested in<br><em>my work?</em></h2>
+    <p class="ct-p">I am happy to share more about any painting, arrange a viewing, or discuss a commission. All originals come with a certificate of authenticity.</p>
+    <button class="btn-wm" onclick="openWM()">
+      <span>Write to me</span>
+      <svg width="14" height="10" viewBox="0 0 18 12" fill="none"><path d="M1 6H17M12 1L17 6L12 11" stroke="currentColor" stroke-width="1.2"/></svg>
+    </button>
+
+    <!-- Follow socials: photo left + icon buttons right -->
+    <div class="soc-section">
+      <div class="soc-lbl">Follow my socials</div>
+      <div class="soc-layout">
+        <div class="soc-photo">
+          <img src="portrait_daria2.jpg" alt="Daria Shamanova">
+        </div>
+        <div class="soc-buttons">
+          <a href="https://www.instagram.com/shammmanova?igsh=bW9iMzNvMWc3ajF2&utm_source=qr" target="_blank" rel="noopener" class="soc-link">
+            <div class="soc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </div>
+            <span class="soc-name">Instagram</span>
+            <svg class="soc-arr" width="14" height="10" viewBox="0 0 18 12" fill="none"><path d="M1 6H17M12 1L17 6L12 11" stroke="currentColor" stroke-width="1.2"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@shmnv22?_r=1&_t=ZS-97oHEWDhXbV" target="_blank" rel="noopener" class="soc-link">
+            <div class="soc-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/></svg>
+            </div>
+            <span class="soc-name">TikTok</span>
+            <svg class="soc-arr" width="14" height="10" viewBox="0 0 18 12" fill="none"><path d="M1 6H17M12 1L17 6L12 11" stroke="currentColor" stroke-width="1.2"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ct-deco rv"><div class="ct-deco-txt">SHMNV</div></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="f-logo">SHMNV</a>
+  <span class="f-copy">© 2025 Daria Shamanova. All rights reserved.</span>
+</footer>
+
+<!-- PAINTING MODAL -->
+<div class="m-back" id="mBack" onclick="handleMBack(event)">
+  <div class="m-box">
+    <button class="m-close" onclick="closeM()"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L15 15M15 1L1 15"/></svg></button>
+    <div class="m-media">
+      <div id="mImg" style="width:100%;height:100%;min-height:500px;display:flex;align-items:center;justify-content:center"></div>
+      <div class="m-thumbs" id="mThumbs"></div>
+    </div>
+    <div class="m-info">
+      <div class="m-coll" id="mColl"></div>
+      <h2 class="m-title" id="mTitle"></h2>
+      <div class="m-year" id="mYear"></div>
+      <p class="m-desc" id="mDesc"></p>
+      <div class="m-collection-text" id="mCollDesc" style="display:none"></div>
+      <div class="m-tags" id="mTags"></div>
+      <div class="m-price-band">
+        <div class="m-price-lbl">Price</div>
+        <div class="m-price-val" id="mPrice"></div>
+      </div>
+      <div class="m-form-title">Enquire about this work</div>
+      <div id="mForm">
+        <input type="hidden" id="mPaintingName">
+        <div class="ff"><input type="text" id="mn" placeholder=" "><label for="mn">Your name</label></div>
+        <div class="ff"><input type="tel" id="mp" placeholder=" "><label for="mp">Phone number</label></div>
+        <div class="ff"><input type="email" id="me" placeholder=" "><label for="me">Email address</label></div>
+        <div class="ff"><input type="text" id="mi" placeholder=" "><label for="mi">Instagram handle</label></div>
+        <div class="ff"><textarea id="mm" rows="3" placeholder=" "></textarea><label for="mm">Message (optional)</label></div>
+        <button class="f-submit" onclick="submitMForm()">Write to me</button>
+      </div>
+      <div class="f-ok" id="mOk">Thank you — Daria will be in touch soon ✦</div>
+    </div>
+  </div>
+</div>
+
+<!-- WRITE ME MODAL -->
+<div class="wm-back" id="wmBack" onclick="handleWMBack(event)">
+  <div class="wm-box">
+    <button class="wm-x" onclick="closeWM()"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L15 15M15 1L1 15"/></svg></button>
+    <div class="wm-title">Write to me</div>
+    <div class="wm-sub">I'll get back to you within 24 hours.</div>
+    <div id="wmForm">
+      <div class="ff"><input type="text" id="wn" placeholder=" "><label for="wn">Your name</label></div>
+      <div class="ff"><input type="tel" id="wp" placeholder=" "><label for="wp">Phone number</label></div>
+      <div class="ff"><input type="email" id="we" placeholder=" "><label for="we">Email address</label></div>
+      <div class="ff"><input type="text" id="wi" placeholder=" "><label for="wi">Instagram handle</label></div>
+      <div class="ff"><textarea id="wm2" rows="4" placeholder=" "></textarea><label for="wm2">Message (optional)</label></div>
+      <button class="f-submit" onclick="submitWMForm()">Send message</button>
+    </div>
+    <div class="f-ok" id="wmOk">Thank you — Daria will be in touch soon ✦</div>
+  </div>
+</div>
+
+<script>
+/* Nav */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('s',scrollY>60));
+function toggleNav(){ document.getElementById('mobNav').classList.toggle('o') }
+
+/* Reveal */
+const ro=new IntersectionObserver(es=>{ es.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('v'),i*60); ro.unobserve(e.target) } }) },{threshold:.07});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+/* Stack */
+function initStack(){
+  const wrap=document.getElementById('stackWrap');
+  const items=[...wrap.querySelectorAll('.stack-item')];
+  const dots=document.getElementById('progDots');
+  const n=items.length, isMob=window.innerWidth<=960;
+  /* On mobile: compact single-col card, small step works well */
+  /* On desktop: card height = vh-140, need step = that height + some buffer */
+  const CARD_H = isMob ? window.innerHeight * 0.75 : window.innerHeight - 140;
+  const STEP   = isMob ? window.innerHeight * 0.8  : CARD_H + 60;
+  const PEEK   = isMob ? 28 : 36;
+  const NAV    = 80;
+
+  wrap.style.height = (n * STEP + window.innerHeight * 0.5) + 'px';
+
+  items.forEach((item, i) => {
+    item.style.top        = (NAV + i * PEEK) + 'px';
+    item.style.zIndex     = i + 1;
+    item.style.height     = (window.innerHeight - NAV - i * PEEK) + 'px';
+    item.style.alignItems = 'center';
+  });
+  dots.innerHTML='';
+  items.forEach((_,i)=>{ const d=document.createElement('div'); d.className='prog-dot'; d.onclick=()=>window.scrollTo({top:wrap.getBoundingClientRect().top+scrollY+i*STEP,behavior:'smooth'}); dots.appendChild(d) });
+  function onScroll(){
+    const wr=wrap.getBoundingClientRect(), inView=wr.top<window.innerHeight&&wr.bottom>0;
+    dots.classList.toggle('vis',inView);
+    const sc=Math.max(0,-wr.top);
+    items.forEach((item,i)=>{
+      const card=item.querySelector('.s-card'), nA=(i+1)*STEP;
+      let s=1,b=1;
+      if(sc>nA){ const o=sc-nA; s=Math.max(.9,1-o/(STEP*2.5)); b=Math.max(.55,1-o/(STEP*1.6)*.5) }
+      card.style.transform=`scale(${s.toFixed(4)})`; card.style.filter=`brightness(${b.toFixed(3)})`; card.style.transformOrigin='top center'; card.style.transition='transform .05s linear,filter .05s linear,box-shadow .6s';
+      const ad=dots.querySelectorAll('.prog-dot');
+      if(ad[i]) ad[i].classList.toggle('a',sc>=i*STEP-STEP*.3&&(i===n-1||sc<nA-STEP*.3));
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+}
+window.addEventListener('resize',()=>{ clearTimeout(window._rst); window._rst=setTimeout(initStack,120) });
+initStack();
+
+/* Filter */
+document.querySelectorAll('.fbtn').forEach(b=>{ b.addEventListener('click',()=>{ document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('a')); b.classList.add('a'); const f=b.dataset.f; document.querySelectorAll('.stack-item').forEach(it=>{ const ok=f==='all'||it.dataset.collection===f; it.style.transition='opacity .35s'; it.style.opacity=ok?'1':'0'; it.style.pointerEvents=ok?'all':'none' }) }) });
+
+/* Modal */
+let imgs=[];
+function openM(el){
+  imgs=JSON.parse(el.dataset.images||'[]');
+  document.getElementById('mColl').textContent=el.dataset.collectionName||'';
+  document.getElementById('mTitle').textContent=el.dataset.title;
+  document.getElementById('mYear').textContent=el.dataset.year;
+  document.getElementById('mDesc').textContent=el.dataset.desc;
+  document.getElementById('mPrice').textContent=el.dataset.price;
+  document.getElementById('mPaintingName').value=el.dataset.title;
+  const cd=document.getElementById('mCollDesc');
+  if(el.dataset.collectionDesc){ cd.textContent=el.dataset.collectionDesc; cd.style.display='block' } else cd.style.display='none';
+  const t=document.getElementById('mTags'); t.innerHTML='';
+  el.dataset.tech.split(',').forEach(s=>{ const x=document.createElement('span'); x.className='m-tag'; x.textContent=s.trim(); t.appendChild(x) });
+  setImg(0); buildThumbs();
+  document.getElementById('mForm').style.display='block'; document.getElementById('mOk').style.display='none';
+  ['mn','mp','me','mi','mm'].forEach(id=>{ document.getElementById(id).value='' });
+  document.getElementById('mBack').classList.add('o'); document.body.style.overflow='hidden';
+}
+function setImg(i){
+  const el=document.getElementById('mImg');
+  el.innerHTML=imgs[i]?`<img src="${imgs[i]}" class="m-main-img" alt="" style="max-width:100%;max-height:100%;object-fit:contain;">`:`<div class="m-main-ph"><span>Artwork photo</span></div>`;
+  document.querySelectorAll('.m-th').forEach((t,j)=>t.classList.toggle('a',j===i));
+}
+function buildThumbs(){ const el=document.getElementById('mThumbs'); el.innerHTML=''; if(imgs.length<=1){el.style.display='none';return} el.style.display='flex'; imgs.forEach((src,i)=>{ const d=document.createElement('div'); d.className='m-th'+(i===0?' a':''); d.onclick=()=>setImg(i); d.innerHTML=`<div class="m-th-ph">${i+1}</div>`; el.appendChild(d) }) }
+function closeM(){ document.getElementById('mBack').classList.remove('o'); document.body.style.overflow='' }
+function handleMBack(e){ if(e.target===document.getElementById('mBack')) closeM() }
+
+const FSID='xlgyvgld';
+async function sendForm(data){ const r=await fetch(`https://formspree.io/f/${FSID}`,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)}); return r.ok }
+
+async function submitMForm(){
+  const n=document.getElementById('mn').value.trim(),p=document.getElementById('mp').value.trim(),e=document.getElementById('me').value.trim(),i=document.getElementById('mi').value.trim(),m=document.getElementById('mm').value.trim(),pn=document.getElementById('mPaintingName').value;
+  if(!n||(!p&&!e)){alert('Please enter your name and at least one contact detail.');return}
+  const btn=document.querySelector('#mForm .f-submit'); btn.textContent='Sending…'; btn.disabled=true;
+  const ok=await sendForm({name:n,phone:p,email:e,instagram:i,message:m,painting:pn,_subject:`Enquiry: ${pn}`});
+  if(ok){document.getElementById('mForm').style.display='none';document.getElementById('mOk').style.display='block'} else{btn.textContent='Write to me';btn.disabled=false;alert('Something went wrong. Please try again.')}
+}
+async function submitWMForm(){
+  const n=document.getElementById('wn').value.trim(),p=document.getElementById('wp').value.trim(),e=document.getElementById('we').value.trim(),i=document.getElementById('wi').value.trim(),m=document.getElementById('wm2').value.trim();
+  if(!n||(!p&&!e)){alert('Please enter your name and at least one contact detail.');return}
+  const btn=document.querySelector('#wmForm .f-submit'); btn.textContent='Sending…'; btn.disabled=true;
+  const ok=await sendForm({name:n,phone:p,email:e,instagram:i,message:m,_subject:'General enquiry — SHMNV'});
+  if(ok){document.getElementById('wmForm').style.display='none';document.getElementById('wmOk').style.display='block'} else{btn.textContent='Send message';btn.disabled=false;alert('Something went wrong. Please try again.')}
+}
+function openWM(){ document.getElementById('wmForm').style.display='block'; document.getElementById('wmOk').style.display='none'; ['wn','wp','we','wi','wm2'].forEach(id=>{document.getElementById(id).value=''}); document.getElementById('wmBack').classList.add('o'); document.body.style.overflow='hidden' }
+function closeWM(){ document.getElementById('wmBack').classList.remove('o'); document.body.style.overflow='' }
+function handleWMBack(e){ if(e.target===document.getElementById('wmBack')) closeWM() }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeM();closeWM()} });
+</script>
+</body>
+</html>
